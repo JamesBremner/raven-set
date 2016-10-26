@@ -29,9 +29,12 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="C:/Users/James/code/raven-set" />
 		</Compiler>
+		<Unit filename="../../../cRunCount.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
