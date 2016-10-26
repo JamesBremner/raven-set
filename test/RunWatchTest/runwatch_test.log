@@ -1,0 +1,5 @@
+raven::set::cRunWatch code timing profile
+                    Scope   Calls	Mean (secs)	Total
+   badly_written_function        1	2.987144	2.987144
+highly_optimised_subroutine     1008	0.002913	2.936674
+    well_written_function        1	0.025386	0.025386
