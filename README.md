@@ -1,4 +1,7 @@
 # raven-set
 A collection of software engineering tools
 
- * **cRunCount** Report frequency at which code is called.
+ * **cRunCount** Code frequency counter.
+ 
+ * **cRunWatch** Code timing profiler.  Documentation at https://ravenspoint.wordpress.com/2010/06/16/timing/
+ 
