@@ -38,11 +38,6 @@ boost::asio::io_service io_service;
 /** Timer used when wait is more than 1 millisecond */
 boost::asio::high_resolution_timer  * myPlaybackTimer;
 
-/** Thread where busy loop timer runs */
-//std::thread * BusyLoopThread;
-
-
-
 /** Function forward declerations */
 void StartWait();
 void handle_expire(const boost::system::error_code& );

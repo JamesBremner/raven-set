@@ -11,6 +11,8 @@ public:
     /** disable copy constructor */
     cTimerBusyLoopContinuous( const cTimerBusyLoopContinuous& bl ) = delete;
 
+    ~cTimerBusyLoopContinuous();
+
     /** Start Busy Loop running */
     void Run();
 
@@ -43,9 +45,15 @@ private:
 };
 
 cTimerBusyLoopContinuous::cTimerBusyLoopContinuous()
-: myfStop( false )
+: myThread( NULL )
+, myfStop( false )
 {
 
+}
+
+cTimerBusyLoopContinuous::~cTimerBusyLoopContinuous()
+{
+    Stop();
 }
 
 void cTimerBusyLoopContinuous::Run()
@@ -135,6 +143,9 @@ void cTimerBusyLoopContinuous::BusyLoop()
 }
 void cTimerBusyLoopContinuous::Stop()
 {
+    if( ! myThread )
+        return;
+
     {
     std::lock_guard<std::mutex> lock( myMutex );
     myfStop = true;
