@@ -45,6 +45,7 @@
 			<Add library="Winmm" />
 			<Add directory="$(#boost.lib)" />
 		</Linker>
+		<Unit filename="../../cTimerBusyLoop.cpp" />
 		<Unit filename="../../cTimerBusyLoop.h" />
 		<Unit filename="cTimerBusyLoopTest.cpp" />
 		<Extensions>
