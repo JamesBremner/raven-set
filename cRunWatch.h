@@ -74,7 +74,7 @@ public:
 	static void StartDaisyChain( int start=1 ) { myFlagDaisyChain = 1; Start( start ); }
 
 	// output report;
-	static std::string Report(const wchar_t * filename = 0 );
+	static std::string Report(const char * filename = 0 );
 
 	// overload < operator so that the scope with the longest total time is sorted first
 	bool operator<(const cRunWatch other ) const

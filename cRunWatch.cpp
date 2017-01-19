@@ -23,6 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 #include <iomanip>
+#include <fstream>
 #ifndef raven_set_crunwatch
 #include "cRunWatch.h"
 #endif
@@ -164,7 +165,7 @@ string cRunWatch::Print() const
 
 
 */
-string cRunWatch::Report( const wchar_t * filename )
+string cRunWatch::Report( const char * filename )
 {
     if( ! myFlagProfiling )
     {
@@ -193,21 +194,14 @@ string cRunWatch::Report( const wchar_t * filename )
         s << w.Print();
     }
 
-    // print
-    fp = 0;
-#ifndef _mingw_
+    cout << s.str();
+
     if( filename )
-        if( _wfopen_s(&fp,filename,L"w") )
-            return;
-#endif
-    if( ! fp )
     {
-        cout << s.str();
-    }
-    else
-    {
-        fprintf( fp, s.str().c_str() );
-        fclose( fp );
+        ofstream ofs( filename );
+        if( ofs ) {
+            ofs << s.str();
+        }
     }
 
     return s.str();
