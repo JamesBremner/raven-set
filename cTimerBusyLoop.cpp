@@ -1,6 +1,5 @@
 #include <windows.h>
-#include <thread>
-#include <mutex>
+
 #include "cTimerBusyLoop.h"
 
 namespace raven
