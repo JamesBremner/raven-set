@@ -23,6 +23,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 #include <iomanip>
+#include <iostream>
 #include <fstream>
 #ifndef raven_set_crunwatch
 #include "cRunWatch.h"
