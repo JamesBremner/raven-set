@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <functional>
 
 #include "cTimerBusyLoop.h"
 
