@@ -171,7 +171,7 @@ namespace raven {
 			myError = 0;
 
 			// format query
-			r = vsprintf_s(queryformattedA, 999, f, _Arglist);
+			r = vsprintf_s(queryformattedA, 1999, f, _Arglist);
 			va_end(_Arglist);
 			if( r < 1 ) {
 				myError = "Query string too long for buffer";

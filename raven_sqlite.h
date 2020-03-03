@@ -32,8 +32,8 @@ public:
     char * myError;
 
     /// the last formatted query submitted to the db engine
-    wchar_t queryformatted[1000];
-    char queryformattedA[1000];
+    wchar_t queryformatted[2000];
+    char queryformattedA[3000];
 
     /// Construct class, but do not open database
     cDB() : db( 0 ) {}
