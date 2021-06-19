@@ -39,7 +39,7 @@ namespace set
 int cRunWatch::myFlagProfiling = 0;
 map < string, accumulator_set<double, stats<tag::variance(lazy)> > > cRunWatch::myMap;
 int cRunWatch::myFlagDaisyChain;
-boost::thread_specific_ptr< std::vector< std::string * > > cRunWatch::myDaisyChain;
+thread_local std::vector< std::string * > * cRunWatch::myDaisyChain;
 
 boost::mutex cRavenProfileMutex;
 
@@ -59,11 +59,11 @@ cRunWatch::cRunWatch( const char* name )
     if( myFlagDaisyChain )
     {
         // using daisy chain feature
-        if( ! myDaisyChain.get() )
+        if( ! myDaisyChain )
         {
             // first time called by this thread
             // construct daisy chain to be used in all subsequent calls from this thread
-            myDaisyChain.reset( new std::vector< std::string * > );
+            myDaisyChain = new std::vector< std::string * >;
         }
         // add name of this watcher to the end of the daisy chain
         myDaisyChain->push_back( &myName );

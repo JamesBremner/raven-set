@@ -33,7 +33,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/thread/tss.hpp>
 
 #include <cstdio>
 #include <map>
@@ -113,7 +112,7 @@ private:
 	static int myFlagDaisyChain;
 
 	// thread specific store of watchers currently running
-	static boost::thread_specific_ptr< std::vector< std::string * > > myDaisyChain;
+	static  thread_local std::vector< std::string * > * myDaisyChain;
 
 	// Statistics
 	float aver;
