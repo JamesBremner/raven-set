@@ -53,11 +53,11 @@ public:
     void Open( const char * fname );
 
     /// Open database, wstring
-    void Open( const std::wstring fname )
+    void Open( const std::wstring& fname )
     {
         Open( fname.c_str() );
     }
-    void Open( const std::string fname )
+    void Open( const std::string& fname )
     {
         Open( fname.c_str() );
     }
