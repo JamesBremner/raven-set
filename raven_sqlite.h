@@ -92,8 +92,57 @@ public:
         return db;
     }
 
+    /** compile SQL statement
+     * @param[in] f the SQL statement
+     * @return pointer to compiled stement, 0 on error
+     */
+    sqlite3_stmt * Prepare(
+        const std::string & f );
+
+    /** bind value to SQL parameter
+     * @param[in] index 1-based index of SQL parameter
+     * @param[in] value
+     */
+    int Bind( int index, int value );
+    int Bind( int index, float value )
+    {
+        return Bind( index, (double) value);
+    }
+    int Bind( int index, double value );
+
+    int step()
+    {
+        return sqlite3_step(stmt);
+    }
+    int reset()
+    {
+        return sqlite3_reset(stmt);
+    }
+    int finalize()
+    {
+        return sqlite3_finalize(stmt);
+    }
+    /** get value read from colum
+     * @param[in] index zero-based index of column
+     * @return value as an integer
+     */
+    int ColumnInt( int index ) {
+        return sqlite3_column_int(stmt, index);
+    }
+    /** get value read from colum
+     * @param[in] index zero-based index of column
+     * @return value as an integer
+     */
+    double ColumnDouble( int index ) {
+        return sqlite3_column_double( stmt, index );
+    }
+
 private:
     sqlite3 * db;
+    sqlite3_stmt * stmt;
+
+    /// error in query - provide human readable msg
+    void decodeError();
 };
 
 
