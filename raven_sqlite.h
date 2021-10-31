@@ -68,6 +68,11 @@ public:
     /// close database, destroy class
     ~cDB();
 
+    /// true if db is open
+    bool isOpen()
+    { return (bool) db;
+    }
+
     /**
     Submit query
 
