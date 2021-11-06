@@ -115,6 +115,19 @@ public:
     }
     int Bind( int index, double value );
 
+    /** bind blob to SQL parameter
+     * @param[in] index 1-based index of SQL parameter
+     * @param[in] pointer to start of blob data
+     * @param[in] size of blob in bytes
+     */
+    int Bind( int index, void* p, int size );
+
+    /** bind string value to SQL parameter
+     * @param[in] index 1-based index of SQL parameter
+     * @param[in] value
+     */
+    int Bind( int index, const std::string& str );
+
     int step()
     {
         return sqlite3_step(stmt);

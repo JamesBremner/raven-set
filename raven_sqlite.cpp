@@ -299,6 +299,34 @@ namespace raven
 			}
 			return 0;
 		}
+		int cDB::Bind(int index, void *p, int size)
+		{
+			if (!stmt)
+			{
+				myError = "no compiled statement";
+				return -1;
+			}
+			if (sqlite3_bind_blob(stmt, index, p, size, SQLITE_STATIC))
+			{
+				decodeError();
+				return -1;
+			}
+			return 0;
+		}
+		int cDB::Bind(int index, const std::string &str)
+		{
+			if (!stmt)
+			{
+				myError = "no compiled statement";
+				return -1;
+			}
+			if (sqlite3_bind_text(stmt, index, str.c_str(), str.length(), SQLITE_STATIC))
+			{
+				decodeError();
+				return -1;
+			}
+			return 0;
+		}
 		void cDB::decodeError()
 		{
 			int nErrMsg = 1 + (int)strlen(sqlite3_errmsg(db));
