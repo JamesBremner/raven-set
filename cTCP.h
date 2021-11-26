@@ -63,10 +63,10 @@ private:
      * 
      * Throws exception on configuration error
      * 
-     * Returns on success or failure of connection
-     * Use isConnected() to determine success or failure
+     * Returns true on success  of connection
+     * Returns false if connection timed out
      */
-    void connectToServer();
+    bool connectToServer();
 };
 
     }
