@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <stdarg.h>
+#include <cstring>
 
 using std::string;
 using std::vector;
