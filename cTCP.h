@@ -1,3 +1,4 @@
+#include <vector>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
@@ -33,6 +34,7 @@ public:
 
     /// Send message to peer
     void send(const std::string &msg);
+    void send( const std::vector< unsigned char >& msg );
 
     /// Wait for message from peer
     void read();

@@ -176,7 +176,7 @@ namespace raven
                 }
                 else
                     throw std::runtime_error(
-                        "connect failed " std::to_string(err));
+                        "connect failed " );
             }
             return true;
         }
@@ -188,6 +188,15 @@ namespace raven
                 myConnectSocket,
                 msg.c_str(),
                 (int)msg.length(), 0);
+        }
+        void cTCP::send( const std::vector< unsigned char >& msg )
+        {            
+            if (myConnectSocket == INVALID_SOCKET)
+                throw std::runtime_error("send on invalid socket");
+            ::send(
+                myConnectSocket,
+                (char*)msg.data(),
+                msg.size(), 0 );
         }
 
     }
