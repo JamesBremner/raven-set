@@ -31,18 +31,18 @@ namespace raven
 		{
 			if (db)
 			{
-				myError = "ERROR: db already open";
+				myError = (char*)"ERROR: db already open";
 				return;
 			}
 			int ret = sqlite3_open16(fname, &db);
 			if (ret)
 			{
-				myError = "ERROR: failed to open db";
+				myError = (char*)"ERROR: failed to open db";
 				return;
 			}
 			if (!db)
 			{
-				myError = "ERROR: failed to open db";
+				myError = (char*)"ERROR: failed to open db";
 				return;
 			}
 			myError = 0;
@@ -58,18 +58,18 @@ namespace raven
 		{
 			if (db)
 			{
-				myError = "ERROR: db already open";
+				myError = (char*)"ERROR: db already open";
 				return;
 			}
 			int ret = sqlite3_open(fname, &db);
 			if (ret)
 			{
-				myError = "ERROR: failed to open db";
+				myError = (char*)"ERROR: failed to open db";
 				return;
 			}
 			if (!db)
 			{
-				myError = "ERROR: failed to open db";
+				myError = (char*)"ERROR: failed to open db";
 				return;
 			}
 			myError = 0;
@@ -91,7 +91,7 @@ namespace raven
 		{
 			if (!db)
 			{
-				myError = "ERROR: db not open";
+				myError = (char*)"ERROR: db not open";
 				return -1;
 			}
 
@@ -108,7 +108,7 @@ namespace raven
 			va_end(_Arglist);
 			if (r < 1)
 			{
-				myError = "Query string too long for buffer";
+				myError = (char*)"Query string too long for buffer";
 				return -1;
 			}
 
@@ -128,7 +128,7 @@ namespace raven
 				}
 				else
 				{
-					myError = "out of memory";
+					myError = (char*)"out of memory";
 				}
 				return -1;
 			}
@@ -174,7 +174,7 @@ namespace raven
 		{
 			if (!db)
 			{
-				myError = "ERROR: db not open";
+				myError = (char*)"ERROR: db not open";
 				return -1;
 			}
 
@@ -191,7 +191,7 @@ namespace raven
 			va_end(_Arglist);
 			if (r < 1)
 			{
-				myError = "Query string too long for buffer";
+				myError = (char*)"Query string too long for buffer";
 				return -1;
 			}
 
@@ -211,7 +211,7 @@ namespace raven
 				}
 				else
 				{
-					myError = "out of memory";
+					myError = (char*)"out of memory";
 				}
 				return -1;
 			}
@@ -276,7 +276,7 @@ namespace raven
 		{
 			if (!stmt)
 			{
-				myError = "no compiled statement";
+				myError = (char*)"no compiled statement";
 				return -1;
 			}
 			if (sqlite3_bind_int(stmt, index, value))
@@ -290,7 +290,7 @@ namespace raven
 		{
 			if (!stmt)
 			{
-				myError = "no compiled statement";
+				myError = (char*)"no compiled statement";
 				return -1;
 			}
 			if (sqlite3_bind_double(stmt, index, value))
@@ -304,7 +304,7 @@ namespace raven
 		{
 			if (!stmt)
 			{
-				myError = "no compiled statement";
+				myError = (char*)"no compiled statement";
 				return -1;
 			}
 			if (sqlite3_bind_blob(stmt, index, p, size, SQLITE_STATIC))
@@ -318,7 +318,7 @@ namespace raven
 		{
 			if (!stmt)
 			{
-				myError = "no compiled statement";
+				myError = (char*)"no compiled statement";
 				return -1;
 			}
 			if (sqlite3_bind_text(stmt, index, str.c_str(), str.length(), SQLITE_STATIC))
@@ -338,7 +338,7 @@ namespace raven
 			}
 			else
 			{
-				myError = "out of memory";
+				myError = (char*)"out of memory";
 			}
 		}
 	}
