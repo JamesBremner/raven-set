@@ -174,6 +174,14 @@ namespace raven
                     std::cout << "connect timed out\n";
                     return false;
                 }
+                else if( err == 10061 )
+                {
+                    throw std::runtime_error(
+                        "No connection could be made because the target machine actively refused it. "
+                        " Generally, it happens that something is preventing a connection to the port or hostname. "
+                        " Either there is a firewall blocking the connection "
+                        " or the process that is hosting the service is not listening on that specific port.");
+                }
                 else
                     throw std::runtime_error(
                         "connect failed " );
