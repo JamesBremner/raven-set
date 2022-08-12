@@ -21,13 +21,21 @@ public:
         myServerPort = ServerPort;
         myServerIP = ServerIP;
     }
-
+    /** Configure serverWait() blocking
+     * 
+     * true: keep trying until connection made ( default on construction )
+     * false: if connection refused return after one attempt
+     */
+    void RetryConnectServer( bool f )
+    {
+        myfRetryServer = f;
+    }
     /** Connect to server
      * 
      * Throws exeption if there is a configuration problem
      * Otherwise blocks until connection
      */
-    void serverWait();
+    bool serverWait();
 
     /// Wait for client connection request
     void acceptClient();
@@ -58,6 +66,7 @@ private:
     SOCKET myConnectSocket; //< socket connected to another tcp
     std::string myRemoteAddress;
     char myReadbuf[1024];
+    bool myfRetryServer;
 
     void initWinSock();
 

@@ -7,7 +7,8 @@ namespace raven
     namespace set
     {
 
-        cTCP::cTCP() : myConnectSocket(INVALID_SOCKET)
+        cTCP::cTCP() : myConnectSocket(INVALID_SOCKET),
+                       myfRetryServer(true)
         {
         }
 
@@ -117,15 +118,17 @@ namespace raven
                 myConnectSocket = INVALID_SOCKET;
             }
         }
-        void cTCP::serverWait()
+        bool cTCP::serverWait()
         {
             while (1)
             {
                 connectToServer();
                 if (isConnected())
                 {
-                    return;
+                    return true;
                 }
+                if( ! myfRetryServer )
+                    return false;
             }
         }
         bool cTCP::connectToServer()
@@ -160,7 +163,7 @@ namespace raven
                 throw std::runtime_error("socket failed");
             }
 
-            //std::cout << "attempting connect\n";
+            // std::cout << "attempting connect\n";
             if (::connect(
                     myConnectSocket,
                     result->ai_addr,
@@ -174,17 +177,17 @@ namespace raven
                     std::cout << "connect timed out\n";
                     return false;
                 }
-                else if( err == 10061 )
+                else if (err == 10061)
                 {
-                    throw std::runtime_error(
-                        "No connection could be made because the target machine actively refused it. "
-                        " Generally, it happens that something is preventing a connection to the port or hostname. "
-                        " Either there is a firewall blocking the connection "
-                        " or the process that is hosting the service is not listening on that specific port.");
+                    std::cout << "No connection could be made because the target machine actively refused it. "
+                                 " Generally, it happens that something is preventing a connection to the port or hostname. "
+                                 " Either there is a firewall blocking the connection "
+                                 " or the process that is hosting the service is not listening on that specific port.\n";
+                    return false;
                 }
                 else
                     throw std::runtime_error(
-                        "connect failed " );
+                        "connect failed error: " + std::to_string(err));
             }
             return true;
         }
@@ -197,14 +200,14 @@ namespace raven
                 msg.c_str(),
                 (int)msg.length(), 0);
         }
-        void cTCP::send( const std::vector< unsigned char >& msg )
-        {            
+        void cTCP::send(const std::vector<unsigned char> &msg)
+        {
             if (myConnectSocket == INVALID_SOCKET)
                 throw std::runtime_error("send on invalid socket");
             ::send(
                 myConnectSocket,
-                (char*)msg.data(),
-                msg.size(), 0 );
+                (char *)msg.data(),
+                msg.size(), 0);
         }
 
     }
