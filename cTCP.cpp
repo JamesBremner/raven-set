@@ -179,7 +179,8 @@ namespace raven
                 }
                 else if (err == 10061)
                 {
-                    std::cout << "No connection could be made because the target machine actively refused it. "
+                    std::cout << myServerIP <<":" << myServerPort
+                        << " No connection could be made because the target machine actively refused it. "
                                  " Generally, it happens that something is preventing a connection to the port or hostname. "
                                  " Either there is a firewall blocking the connection "
                                  " or the process that is hosting the service is not listening on that specific port.\n";
