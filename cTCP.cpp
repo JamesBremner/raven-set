@@ -127,7 +127,7 @@ namespace raven
                 {
                     return true;
                 }
-                if( ! myfRetryServer )
+                if (!myfRetryServer)
                     return false;
             }
         }
@@ -164,10 +164,21 @@ namespace raven
             }
 
             // std::cout << "attempting connect\n";
-            if (::connect(
+            int connect_return;
+            try
+            {
+                connect_return = ::connect(
                     myConnectSocket,
                     result->ai_addr,
-                    (int)result->ai_addrlen) == SOCKET_ERROR)
+                    (int)result->ai_addrlen);
+            }
+            catch (std::runtime_error &e)
+            {
+                std::cout << myServerIP << ":" << myServerPort
+                    << " socket connect threw exception";
+                    connect_return = SOCKET_ERROR;
+            }
+            if (connect_return == SOCKET_ERROR)
             {
                 int err = WSAGetLastError();
                 closesocket(myConnectSocket);
@@ -179,17 +190,19 @@ namespace raven
                 }
                 else if (err == 10061)
                 {
-                    std::cout << myServerIP <<":" << myServerPort
-                        << " No connection could be made because the target machine actively refused it. "
+                    std::cout << myServerIP << ":" << myServerPort
+                              << " No connection could be made because the target machine actively refused it. "
                                  " Generally, it happens that something is preventing a connection to the port or hostname. "
                                  " Either there is a firewall blocking the connection "
                                  " or the process that is hosting the service is not listening on that specific port.\n";
                     return false;
                 }
                 else
-                    throw std::runtime_error(
-                        "connect failed error: " + std::to_string(err));
+                    std::cout <<
+                        "connect failed error: " << std::to_string(err);
+                    return false;
             }
+
             return true;
         }
         void cTCP::send(const std::string &msg)
