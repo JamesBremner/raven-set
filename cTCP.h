@@ -59,6 +59,11 @@ public:
         return myConnectSocket != INVALID_SOCKET;
     }
 
+    std::string serverPort() const
+    {
+        return myServerPort;
+    }
+
 private:
     std::string myServerIP;
     std::string myServerPort;
