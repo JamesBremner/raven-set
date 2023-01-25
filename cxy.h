@@ -49,6 +49,8 @@ public:
                                const cxy &a, const cxy &b,
                                const cxy &c, const cxy &d);
 
+    static bool isIntersect(cxy& p1, cxy& q1, cxy& p2, cxy& q2);
+
     /// angle between line segments, radians
 
     /// @brief angle between line segments, radians
