@@ -1,4 +1,6 @@
 #include <vector>
+#include <iostream>
+#include <math.h>
 #include "cxy.h"
 
 cxy cxy::vect(const cxy &other) const
@@ -66,3 +68,41 @@ cxy cxy::enclosingWidthHeight(
         ret.y = max.y - min.y;
         return ret;
      }
+
+    bool cxy::isIntersection( cxy& p,
+                     const cxy& a, const cxy& b,
+                     const cxy& c, const cxy& d )
+    {
+        float s1_x, s1_y, s2_x, s2_y;
+
+        s1_x = b.x - a.x;
+        s1_y = b.y - a.y;
+        s2_x = d.x - c.x;
+        s2_y = d.y - c.y;
+
+        float s, t;
+        s = (-s1_y * (a.x -c.x) + s1_x * (a.y - c.y)) /
+            (-s2_x * s1_y + s1_x * s2_y);
+        t = (s2_x * (a.x - c.x) - s2_y * (a.x - c.x)) /
+            (-s2_x * s1_y + s1_x * s2_y);
+
+        if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+        {
+            // Collision detected
+            p.x = a.x + (t * s1_x);
+            p.y = a.y + (t * s1_y);
+            return true;
+        }
+
+        return false; // No collision
+    }
+
+    double cxy::angle(  const cxy& a, const cxy& b,
+               const cxy& c, const cxy& d )
+{
+    cxy v1 = a.vect( b );
+    cxy v2 = c.vect( d );
+    double dot = v1.x* v2.x + v1.y*v2.y;
+    double det = v1.x*v2.y - v1.y*v2.x;
+    return atan2(det, dot);
+}
