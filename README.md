@@ -12,4 +12,10 @@ A collection of software engineering tools
  * **cZLIB** zlib C++ wrapper
 
  * **cTCP** winsock C++ wrapper
+
+ * **cCommandParser** Command line option parser
+ 
+ * **cxy** 2D point with computational geometry methods
+
+ * **cutest** Unit testing framework
  
