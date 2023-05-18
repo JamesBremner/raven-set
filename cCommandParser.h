@@ -9,6 +9,23 @@ namespace raven
          *
          * This implements the main features of boost::program_options
          * but using a tiny amount of standard C++17 code in a self contained header
+         * 
+         * Usage:
+         * 
+<pre>
+int main(int argc, char *argv[])
+{
+    raven::set::cCommandParser P;
+    P.add("help", "\tproduce help message");
+    P.add("solve", "fname\tsolve a maze");
+    P.add("gen", "bin|rec\tgenerate maze with binary or recursive algorithm");
+    P.add("rows", "count\trows in generated maze");
+    P.add("cols", "count\tcolumns in generated maze");
+    P.parse(argc, argv);
+
+    auto fname = P.value("solve");
+    ...
+</pre>
          */
         class cCommandParser
         {
