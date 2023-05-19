@@ -81,6 +81,9 @@ int main(int argc, char *argv[])
              * @param[in] name of the option, used for prompt and for retrieving the value
              * @param[in] desc of the option, for the help display
              * @param[in] type defaults to value, "bool" for boolean
+             * 
+             * A value type expects "--name <value>" in the command line
+             * A boolean type expects "--name" in the command line.  It sets value to "t" if present, otherwise "f"
              */
             void add(
                 const std::string &name,
