@@ -9,9 +9,9 @@ namespace raven
          *
          * This implements the main features of boost::program_options
          * but using a tiny amount of standard C++17 code in a self contained header
-         * 
+         *
          * Usage:
-         * 
+         *
 <pre>
 int main(int argc, char *argv[])
 {
@@ -29,16 +29,26 @@ int main(int argc, char *argv[])
          */
         class cCommandParser
         {
+            enum class eType
+            {
+                value,
+                yesno
+            };
+
             /// private class for a command line option, used only by cCommandParser
             class cCommandOption
             {
             public:
                 cCommandOption(
                     const std::string &name,
-                    const std::string &desc)
+                    const std::string &desc,
+                    eType type = eType::value)
                     : myName(name),
-                      myDesc(desc)
+                      myDesc(desc),
+                      myType(type)
                 {
+                    if (myType == eType::yesno)
+                        myValue = "f";
                 }
                 void describe() const
                 {
@@ -54,26 +64,39 @@ int main(int argc, char *argv[])
                 {
                     return myValue;
                 }
+                eType type() const
+                {
+                    return myType;
+                }
 
             private:
                 std::string myName;
                 std::string myDesc;
                 std::string myValue;
+                eType myType;
             };
 
         public:
             /** Add an option to be parsed
              * @param[in] name of the option, used for prompt and for retrieving the value
              * @param[in] desc of the option, for the help display
+             * @param[in] type defaults to value, "bool" for boolean
              */
             void add(
                 const std::string &name,
-                const std::string &desc)
+                const std::string &desc,
+                const std::string &type = "")
             {
-                myOption.insert(
-                    std::make_pair(
-                        name,
-                        cCommandOption(name, desc)));
+                if (type.size())
+                    myOption.insert(
+                        std::make_pair(
+                            name,
+                            cCommandOption(name, desc, eType::yesno)));
+                else
+                    myOption.insert(
+                        std::make_pair(
+                            name,
+                            cCommandOption(name, desc)));
             }
             /// Display the help message describing the options on the console
             void describe()
@@ -105,7 +128,7 @@ int main(int argc, char *argv[])
                 std::string token, v;
                 for (int k = 0; k < (ac - 1) / 2; k++)
                 {
-                    iss >> token >> v;
+                    iss >> token;
                     if (token == "--help")
                     {
                         describe();
@@ -114,10 +137,15 @@ int main(int argc, char *argv[])
                     auto o = myOption.find(token.substr(2));
                     if (o == myOption.end())
                         continue;
+                    if (o->second.type() == eType::value)
+                        iss >> v;
+                    else
+                        v = "t";
                     o->second.value(v);
                 }
             }
             /// get the option value by name, must be called after parse()
+            /// @return value ("t" or "f" for boolean type )
             std::string value(const std::string name) const
             {
                 auto o = myOption.find(name);
