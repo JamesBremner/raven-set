@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 
                 std::istringstream iss(myLine);
                 std::string token, v;
-                for (int k = 0; k < (ac - 1) / 2; k++)
+                for (int k = 1; k < ac; k++)
                 {
                     iss >> token;
                     if (token == "--help")
@@ -140,8 +140,11 @@ int main(int argc, char *argv[])
                     auto o = myOption.find(token.substr(2));
                     if (o == myOption.end())
                         continue;
-                    if (o->second.type() == eType::value)
+                    if (o->second.type() == eType::value) {
+                        // read command value
                         iss >> v;
+                        k++;
+                    }
                     else
                         v = "t";
                     o->second.value(v);
