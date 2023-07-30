@@ -21,9 +21,11 @@ int main(int argc, char *argv[])
     P.add("gen", "bin|rec\tgenerate maze with binary or recursive algorithm");
     P.add("rows", "count\trows in generated maze");
     P.add("cols", "count\tcolumns in generated maze");
+    P.add("path", "prioritize critical path tasks ( default: off )","bool");
     P.parse(argc, argv);
 
     auto fname = P.value("solve");
+    myTaskGraph.flagCritPath = ( P.value("path") == "t");
     ...
 </pre>
          */
