@@ -17,21 +17,29 @@ double cxy::dist2(const cxy &other) const
     return v.x * v.x + v.y * v.y;
 }
 
-double cxy::dis2toline(
+double cxy::closest(
     const cxy &line1,
     const cxy &line2) const
 {
     cxy AB = line1.vect(line2);
     cxy AP = line1.vect(*this);
     double lAB = AB.x * AB.x + AB.y * AB.y;
-    double t = (AB.x * AP.x + AB.y * AP.y) / lAB;
+    return (AB.x * AP.x + AB.y * AP.y) / lAB;
+}
+
+double cxy::dis2toline(
+    const cxy &line1,
+    const cxy &line2) const
+{
+    double t = closest( line1, line2 );
     if (t < 0)
         t = 0;
     if (t > 1)
         t = 1;
-    cxy closest;
-    closest.x = line1.x + t * AB.x;
-    closest.y = line1.y + t * AB.y;
+    cxy AB = line1.vect(line2);
+    cxy closest(
+        line1.x + t * AB.x,
+        line1.y + t * AB.y );
     return dist2(closest);
 }
 

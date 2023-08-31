@@ -26,6 +26,11 @@ public:
     /// @return
     double dist2(const cxy &other) const;
 
+    // closest point on line to this point, fraction ( point = end1 + t * end2 )
+    double closest(
+    const cxy &end1,
+    const cxy &end2) const;
+
     /// @brief distance squared from this point to nearest point on line segment
     /// @param end1 line segment endpoint
     /// @param end2 line segment endpoint
