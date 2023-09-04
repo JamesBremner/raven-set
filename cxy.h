@@ -26,10 +26,16 @@ public:
     /// @return
     double dist2(const cxy &other) const;
 
-    // closest point on line to this point, fraction ( point = end1 + t * end2 )
-    double closest(
-    const cxy &end1,
-    const cxy &end2) const;
+    // closest point on line to this point, fraction ( point = end1 + t * (end2-end1) )
+    // return t
+    double tclosest(
+        const cxy &end1,
+        const cxy &end2) const;
+
+    // closest point on line segment to this point
+    cxy closest(
+        const cxy &end1,
+        const cxy &end2) const;
 
     /// @brief distance squared from this point to nearest point on line segment
     /// @param end1 line segment endpoint
@@ -54,21 +60,20 @@ public:
                                const cxy &a, const cxy &b,
                                const cxy &c, const cxy &d);
 
-    static bool isIntersect(cxy& p1, cxy& q1, cxy& p2, cxy& q2);
+    static bool isIntersect(cxy &p1, cxy &q1, cxy &p2, cxy &q2);
 
     /// angle between line segments, radians
 
     /// @brief angle between line segments, radians
     /// @param a,b line segment
-    /// @param c,d line segment 
+    /// @param c,d line segment
     /// @return angle in radians
 
     static double angle(
         const cxy &a, const cxy &b,
         const cxy &c, const cxy &d);
 
-
-    bool operator==( const cxy& other ) const
+    bool operator==(const cxy &other) const
     {
         return x == other.x && y == other.y;
     }

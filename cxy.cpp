@@ -17,7 +17,7 @@ double cxy::dist2(const cxy &other) const
     return v.x * v.x + v.y * v.y;
 }
 
-double cxy::closest(
+double cxy::tclosest(
     const cxy &line1,
     const cxy &line2) const
 {
@@ -27,11 +27,26 @@ double cxy::closest(
     return (AB.x * AP.x + AB.y * AP.y) / lAB;
 }
 
+cxy cxy::closest(
+    const cxy &end1,
+    const cxy &end2) const
+{
+    double t = tclosest(
+        end1, end2);
+    if (t < 0)
+        t = 0;
+    if (t > 1)
+        t = 1;
+    cxy ret(end1.x + t * (end2.x - end1.x),
+            end1.y + t * (end2.y - end1.y));
+    return ret;
+}
+
 double cxy::dis2toline(
     const cxy &line1,
     const cxy &line2) const
 {
-    double t = closest( line1, line2 );
+    double t = tclosest(line1, line2);
     if (t < 0)
         t = 0;
     if (t > 1)
@@ -39,7 +54,7 @@ double cxy::dis2toline(
     cxy AB = line1.vect(line2);
     cxy closest(
         line1.x + t * AB.x,
-        line1.y + t * AB.y );
+        line1.y + t * AB.y);
     return dist2(closest);
 }
 
