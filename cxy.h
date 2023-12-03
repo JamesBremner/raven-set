@@ -1,5 +1,6 @@
 
 #pragma once
+#include <cfloat>
 
 /// @brief 2D point or vector
 class cxy
@@ -10,6 +11,8 @@ public:
     double y;
 
     cxy()
+        : x(-FLT_MAX),
+        y(-FLT_MAX)
     {
     }
     cxy(int X, int Y)
@@ -73,8 +76,22 @@ public:
         const cxy &a, const cxy &b,
         const cxy &c, const cxy &d);
 
+    bool isValid() const
+    {
+        return ( ( x != -FLT_MAX) && ( y != -FLT_MAX ));
+    }
+    void invalidate()
+    { 
+        x = -FLT_MAX;
+        y = -FLT_MAX;
+    }
     bool operator==(const cxy &other) const
     {
         return x == other.x && y == other.y;
+    }
+    friend std::ostream &operator<<(std::ostream &os, cxy p)
+    {
+        os << "(" << p.x << "," << p.y << ")";
+        return os;
     }
 };

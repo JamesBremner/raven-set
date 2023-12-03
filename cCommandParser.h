@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <map>
 namespace raven
@@ -131,7 +132,8 @@ int main(int argc, char *argv[])
 
                 std::istringstream iss(myLine);
                 std::string token, v;
-                for (int k = 1; k < ac; k++)
+                //for (int k = 1; k < ac; k++)
+                while( iss.good() )
                 {
                     iss >> token;
                     if (token == "--help")
@@ -145,7 +147,6 @@ int main(int argc, char *argv[])
                     if (o->second.type() == eType::value) {
                         // read command value
                         iss >> v;
-                        k++;
                     }
                     else
                         v = "t";
