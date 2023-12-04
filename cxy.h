@@ -11,11 +11,11 @@ public:
     double y;
 
     cxy()
-        : x(-FLT_MAX),
-        y(-FLT_MAX)
+        : x(-DBL_MAX),
+        y(-DBL_MAX)
     {
     }
-    cxy(int X, int Y)
+    cxy(double X, double Y)
         : x(X), y(Y)
     {
     }
@@ -78,12 +78,12 @@ public:
 
     bool isValid() const
     {
-        return ( ( x != -FLT_MAX) && ( y != -FLT_MAX ));
+        return ( ( x > -DBL_MAX+1) && ( y > -DBL_MAX+1 ));
     }
     void invalidate()
     { 
-        x = -FLT_MAX;
-        y = -FLT_MAX;
+        x = -DBL_MAX;
+        y = -DBL_MAX;
     }
     bool operator==(const cxy &other) const
     {
