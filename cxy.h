@@ -65,7 +65,6 @@ public:
 
     static bool isIntersect(cxy &p1, cxy &q1, cxy &p2, cxy &q2);
 
-    /// angle between line segments, radians
 
     /// @brief angle between line segments, radians
     /// @param a,b line segment
@@ -75,6 +74,17 @@ public:
     static double angle(
         const cxy &a, const cxy &b,
         const cxy &c, const cxy &d);
+
+    /// @brief clockwise turn going from a to b to c, radians
+    /// @param a 
+    /// @param b 
+    /// @param c 
+    /// @return angle in radians
+
+    static double clockwise(
+    const cxy &a,
+    const cxy &b,
+    const cxy &c);
 
     bool isValid() const
     {

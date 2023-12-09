@@ -155,3 +155,17 @@ double cxy::angle(const cxy &a, const cxy &b,
     double det = v1.x * v2.y - v1.y * v2.x;
     return atan2(det, dot);
 }
+
+double cxy::clockwise(
+    const cxy &a,
+    const cxy &b,
+    const cxy &c)
+{
+    double ang = cxy::angle(
+        b, a,
+        b, c);
+    // go around the other way
+    if (ang < 0)
+        ang += 6.28;
+    return ang;
+}
