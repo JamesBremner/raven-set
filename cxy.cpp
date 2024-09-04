@@ -141,6 +141,10 @@ C = Ax1+By1
             return false;
         if (!(std::min(a.y, b.y) <= p.y && p.y <= std::max(a.y, b.y)))
             return false;
+        if (!(std::min(c.x, d.x) <= p.x && p.x <= std::max(c.x, d.x)))
+            return false;
+        if (!(std::min(c.y, d.y) <= p.y && p.y <= std::max(c.y, d.y)))
+            return false;
 
         return true;
     }
