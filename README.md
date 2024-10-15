@@ -16,6 +16,10 @@ A collection of software engineering tools
  * **cCommandParser** Command line option parser
  
  * **cxy** 2D point with computational geometry methods
+   
+ * **cxyz** 3D point with computational geometry methods
 
  * **cutest** Unit testing framework
+   
+ * **cssex** Solution Space explorer for mathematical optimization
  
