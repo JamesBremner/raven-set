@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include <stdexcept>
 #include "cRunWatch.h"
 
@@ -35,7 +36,7 @@ bool cSSex::nextTestValues(
 
 void cSSex::checkFunctionValue()
 {
-     copy(&myVarTestVals[0]);
+    copy(&myVarTestVals[0]);
 
     // check that all variable constraints are true
     if (!isFeasible())
@@ -55,7 +56,7 @@ void cSSex::checkFunctionValue()
 void cSSex::search()
 {
     raven::set::cRunWatch("cSSex::search");
-    
+
     // search space at low rez
     myOptValue = 0;
     myVarTestVals.clear();
@@ -93,5 +94,63 @@ void cSSex::search()
         checkFunctionValue();
     }
 
+    copyOptVals();
+}
+
+void cSSex::anneal( int tryBudget  )
+{
+    srand(time(NULL));
+    myOptValue = 0;
+    myVarBestVals.clear();
+    myVarBestVals.resize(myVarCount, 0);
+
+    int acceptWorseProb = 50;            // the annealing temperature
+    while (true)
+    {
+        // reset to "best" so far
+        myVarTestVals = myVarBestVals;
+
+        // small random change
+        int var = rand() % myVarCount;
+        int up = rand() % 2;
+        if (up == 0)
+            myVarTestVals[var] += 1;
+        else
+            myVarTestVals[var] -= 1;
+
+        // set to user's solution space
+        copy(&myVarTestVals[0]);
+
+        // check that all variable constraints are true
+
+        if (!isFeasible())
+            continue;
+
+        // check for new optimum
+        int o = optFunVal();
+        if (o >= myOptValue)
+        {
+            // always accept improvement
+            myOptValue = o;
+            myVarBestVals = myVarTestVals;
+            continue;
+        }
+        if (o < myOptValue)
+        {
+            // accept worse result if temperature still high
+            if (rand() % 100 < acceptWorseProb)
+            {
+                myOptValue = o;
+                myVarBestVals = myVarTestVals;
+                acceptWorseProb--;
+                if (acceptWorseProb == 0)
+                    break;
+            }
+        }
+
+        tryBudget--;
+        if( ! tryBudget )
+            break;
+    }
     copyOptVals();
 }
