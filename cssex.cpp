@@ -5,6 +5,34 @@
 
 #include "cssex.h"
 
+cSSex::cSSex()
+    : myVarCount(-1)
+{
+    regObjectiveFunction(
+        [this]() -> int
+        {
+            return noRegisteredFunction("Objective");
+        });
+    regFeasibleFunction(
+        [this]() -> bool
+        {
+            noRegisteredFunction("Feasible");
+            return false;
+        });
+    regCopyTestFunction(
+        [this](int *p)
+        {
+            noRegisteredFunction("CopyTest");
+        });
+}
+
+int cSSex::noRegisteredFunction(
+    const std::string &missing)
+{
+    throw std::runtime_error(
+        " cSSex No registered function " + missing);
+}
+
 void cSSex::SolutionSpace(int count, int max)
 {
     myVarCount = count;
@@ -13,15 +41,17 @@ void cSSex::SolutionSpace(int count, int max)
 
 bool cSSex::nextTestValues(
     std::vector<int> &test,
-    int max)
+    int max,
+    int rez)
 {
     int k = 0;
     while (true)
     {
         int *p = &test[k];
-        *p += myRez;
+        *p += rez;
         if (*p <= max)
             break;
+        // cary over
         *p = 0;
         k++;
         if (k == myVarTestVals.size())
@@ -34,23 +64,25 @@ bool cSSex::nextTestValues(
     return true;
 }
 
-void cSSex::checkFunctionValue()
+bool cSSex::checkFunctionValue()
 {
-    copy(&myVarTestVals[0]);
+    copyTest(&myVarTestVals[0]);
 
     // check that all variable constraints are true
-    if (!isFeasible())
-        return;
+    if (!feasibleFunction())
+        return false;
 
     // check for improved function value
-    int o = optFunVal();
-    if (o > myOptValue)
+    int o = objectiveFunction();
+    if (o > myOptObjFunValue)
     {
         // save the improved value
         // and the variable values that gave it
-        myOptValue = o;
+        myOptObjFunValue = o;
         myVarBestVals = myVarTestVals;
+        return true;
     }
+    return false;
 }
 
 void cSSex::search()
@@ -58,15 +90,18 @@ void cSSex::search()
     raven::set::cRunWatch("cSSex::search");
 
     // search space at low rez
-    myOptValue = 0;
+    myOptObjFunValue = 0;
     myVarTestVals.clear();
     myVarTestVals.resize(myVarCount, 0);
-    myRez = myVarMax / 5;
+    int rez = myVarMax / 5;
 
     while (true)
     {
         // next test value set
-        if (!nextTestValues(myVarTestVals, myVarMax))
+        if (!nextTestValues(
+                myVarTestVals,
+                myVarMax,
+                rez))
         {
             // search is complete
             copyOptVals();
@@ -79,14 +114,13 @@ void cSSex::search()
             "cSex::search low rez failed to find feasible solution");
 
     // search local space around low rez opt at high rez
-    int tvMax = 2 * (myRez - 1);
+    int tvMax = 2 * (rez - 1);
     int tvd = tvMax / 2;
-    myRez = 1;
     auto start = myVarBestVals;
     std::vector<int> test(myVarCount, 0);
     while (true)
     {
-        if (!nextTestValues(test, tvMax))
+        if (!nextTestValues(test, tvMax, 1))
             break;
         for (int i = 0; i < myVarCount; i++)
             myVarTestVals[i] = start[i] + test[i] - tvd;
@@ -97,14 +131,14 @@ void cSSex::search()
     copyOptVals();
 }
 
-void cSSex::anneal( int tryBudget  )
+void cSSex::anneal(int tryBudget)
 {
     srand(time(NULL));
-    myOptValue = 0;
+    myOptObjFunValue = 0;
     myVarBestVals.clear();
     myVarBestVals.resize(myVarCount, 0);
 
-    int acceptWorseProb = 50;            // the annealing temperature
+    int acceptWorseProb = 50; // the annealing temperature
     while (true)
     {
         // reset to "best" so far
@@ -119,28 +153,28 @@ void cSSex::anneal( int tryBudget  )
             myVarTestVals[var] -= 1;
 
         // set to user's solution space
-        copy(&myVarTestVals[0]);
+        copyTest(&myVarTestVals[0]);
 
         // check that all variable constraints are true
 
-        if (!isFeasible())
+        if (!feasibleFunction())
             continue;
 
         // check for new optimum
-        int o = optFunVal();
-        if (o >= myOptValue)
+        int o = objectiveFunction();
+        if (o >= myOptObjFunValue)
         {
             // always accept improvement
-            myOptValue = o;
+            myOptObjFunValue = o;
             myVarBestVals = myVarTestVals;
             continue;
         }
-        if (o < myOptValue)
+        if (o < myOptObjFunValue)
         {
             // accept worse result if temperature still high
             if (rand() % 100 < acceptWorseProb)
             {
-                myOptValue = o;
+                myOptObjFunValue = o;
                 myVarBestVals = myVarTestVals;
                 acceptWorseProb--;
                 if (acceptWorseProb == 0)
@@ -149,8 +183,39 @@ void cSSex::anneal( int tryBudget  )
         }
 
         tryBudget--;
-        if( ! tryBudget )
+        if (!tryBudget)
             break;
     }
     copyOptVals();
+}
+
+void cSSex::greedy()
+{
+    raven::set::cRunWatch("cSSex::greedy");
+
+    myOptObjFunValue = 0;
+    myVarBestVals.clear();
+    myVarBestVals.resize(myVarCount, 0);
+    std::vector<int> vupdown = {-1, 1};
+
+    while (true)
+    {
+        bool improved = false;
+        for (int k = 0; k < myVarCount; k++)
+        {
+            for (int ud : vupdown)
+            {
+                // reset to "best" so far
+                myVarTestVals = myVarBestVals;
+
+                // make small change
+                myVarTestVals[k] += ud;
+
+                if (checkFunctionValue())
+                    improved = true;
+            }
+        }
+        if (!improved)
+            break;
+    }
 }
