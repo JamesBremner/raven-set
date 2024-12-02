@@ -2,6 +2,8 @@
 #pragma once
 #include <cfloat>
 
+#define RAVEN_SET_CXY
+
 /// @brief 2D point or vector
 class cxy
 {
@@ -18,6 +20,11 @@ public:
     cxy(double X, double Y)
         : x(X), y(Y)
     {
+    }
+    cxy( const cxy& xy )
+    : x( xy.x), y(xy.y)
+    {
+
     }
     /// @brief vector from this point to other
     /// @param other
@@ -94,9 +101,28 @@ public:
         x = -DBL_MAX;
         y = -DBL_MAX;
     }
+    void zoom( float ratio )
+    {
+        x *= ratio;
+        y *= ratio;
+    }
     bool operator==(const cxy &other) const
     {
         return x == other.x && y == other.y;
+    }
+    cxy operator+( const cxy &other) const
+    {
+        cxy ret( *this );
+        ret.x += other.x;
+        ret.y += other.y;
+        return ret;
+    }
+    cxy operator-( const cxy &other) const
+    {
+        cxy ret( *this );
+        ret.x -= other.x;
+        ret.y -= other.y;
+        return ret;
     }
     friend std::ostream &operator<<(std::ostream &os, cxy p)
     {
