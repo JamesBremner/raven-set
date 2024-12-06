@@ -124,6 +124,30 @@ public:
         ret.y -= other.y;
         return ret;
     }
+    cxy& operator*=( float s )
+    {
+        x *= s;
+        y *= s;
+        return *this;
+    }
+    cxy& operator*=( const cxy& other )
+    {
+        x *= other.x;
+        y *= other.y;
+        return *this;
+    }
+    cxy& operator+=( const cxy& other )
+    {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+    cxy& operator/=( float s )
+    {
+        x /= s;
+        y /= s;
+        return *this;
+    }
     friend std::ostream &operator<<(std::ostream &os, cxy p)
     {
         os << "(" << p.x << "," << p.y << ")";
